@@ -30,7 +30,7 @@ app.post("/send-mail", async (req, res) => {
     return res.status(500).json({ status: "error", error: "{subject} is required!" });
   };
   
-  if (!text || !html){
+  if (!text && !html){
     return res.status(500).json({ status: "error", error: "{html} / {text} is required!" });
   };
   
