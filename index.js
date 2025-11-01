@@ -20,14 +20,33 @@ transporter.verify((error, success) => {
 });
 
 app.post("/send-mail", async (req, res) => {
-  const { to, subject, text } = req.body;
+  const { to, subject, text, html } = req.body;
+  
+  if (!to){
+    return res.status(500).json({ status: "error", error: "{to} is required!" });
+  };
+  
+  if (!subject){
+    return res.status(500).json({ status: "error", error: "{subject} is required!" });
+  };
+  
+  if (!text || !html){
+    return res.status(500).json({ status: "error", error: "{html} / {text} is required!" });
+  };
+  
+  if (text && html){
+    return res.status(500).json({ status: "error", error: "{html} && {text} - only one is required!" });
+  };
+  
 
   const mailOptions = {
     from: `Dappsics APP <${process.env.SMTP_USER}>`,
     to,
     subject,
-    html: `<p>${text}</p>`,
   };
+  
+  if (html) mailOptions.html = html;
+  if (text) mailOptions.text = text;
 
   try {
     const info = await transporter.sendMail(mailOptions);
