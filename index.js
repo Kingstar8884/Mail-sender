@@ -20,7 +20,7 @@ transporter.verify((error, success) => {
 });
 
 app.post("/send-mail", async (req, res) => {
-  const { to, subject, text, html } = req.body;
+  const { to, subject, text, html } = req.body || {};
   
   if (!to){
     return res.status(500).json({ status: "error", error: "{to} is required!" });
